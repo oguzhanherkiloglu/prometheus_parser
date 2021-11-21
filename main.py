@@ -32,11 +32,10 @@ def convert_json_to_proper_json_array(json_response):
     intendedfilename = "test.csv"
     i = 0
     for object in json_response:
-        main_json_object = {
-            convert_epoch_time_to_datetime(object['values'][i][0]): "",
-        }
-        required_json_object = dict()
         required_json_object = {convert_epoch_time_to_datetime(object['values'][i][0]): ""}
+        required_json_object_values_list = []
+        required_json_object_values_dict = dict()
+        # required_json_object = {convert_epoch_time_to_datetime(object['values'][i][0]): ""}
         for object_values in object['values']:
             intendedfilename = "Rack" + object['metric']['Rack_Cabinet'] + "firstrow" + object['metric'][
                 'First_Row'] + "height" + object['metric']['Height'] + ".csv"
@@ -49,51 +48,64 @@ def convert_json_to_proper_json_array(json_response):
                 'name') == 'SYS Usage'):
                 # {“12-09-2021 15:30:00” :{ “CPUTemp”: “50 C”, “inletTemp”: “17 C”, “pwrConsumption”: “500 Watts”, “systemUsage”: “70 percent”, “exhaustTemp”: “32” }}
                 if object['metric'].get('__name__') == 'ipmi_current_amperes':
-                    if object['metric']['name'] + "[Amper]" not in required_json_object:
-                        required_json_object[convert_epoch_time_to_datetime(object_values[0])].append(
-                            object['metric']['name'] + "[Amper]", object_values[1]
-                        )
+                    if object['metric']['name'] + "[Amper]" not in required_json_object_values_dict.keys():
+                        required_json_object_values_list.append({
+                            object['metric']['name'] + "[Amper]": object_values[1]
+                        })
+                        required_json_object_values_dict[object['metric']['name'] + "[Amper]"] = 'processed'
 
                 elif object['metric'].get('__name__') == 'ipmi_fan_speed_rpm':
-                    if object['metric']['name'] + "[RPM]" not in required_json_object:
-                        required_json_object[convert_epoch_time_to_datetime(object_values[0])].append({
+                    if object['metric']['name'] + "[RPM]" not in required_json_object_values_dict.keys():
+                        required_json_object_values_list.append({
                             object['metric']['name'] + "[RPM]": object_values[1]
                         })
+                        required_json_object_values_dict[object['metric']['name'] + "[RPM]"] = 'processed'
 
                 elif object['metric'].get('__name__') == 'ipmi_power_watts':
-                    if object['metric']['name'] + "[Watts]" not in required_json_object:
-                        required_json_object[convert_epoch_time_to_datetime(object_values[0])].append((
-                            object['metric']['name'] + "[Watts]", object_values[1]
-                        ))
+                    if object['metric']['name'] + "[Watts]" not in required_json_object_values_dict.keys():
+                        required_json_object_values_list.append({
+                            object['metric']['name'] + "[Watts]": object_values[1]
+                        })
+                        required_json_object_values_dict[object['metric']['name'] + "[Watts]"] = 'processed'
 
                 elif object['metric'].get('__name__') == 'ipmi_temperature_celsius':
                     if object['metric']['instance'] == '192.168.105.153' and object['metric']['id'] == '151':
-                        if "CPU1" + object['metric']['name'] + "[C]" not in required_json_object:
-                            required_json_object[convert_epoch_time_to_datetime(object_values[0])].append((
-                                "CPU1" + object['metric']['name'] + "[C]", object_values[1]
-                            ))
+                        if "CPU1" + object['metric']['name'] + "[C]" not in required_json_object_values_dict.keys():
+                            required_json_object_values_list.append({
+                                "CPU1" + object['metric']['name'] + "[C]": object_values[1]
+                            })
+                            required_json_object_values_dict[object['metric']['name'] + "[C]"] = 'processed'
 
                     else:
-                        if object['metric']['name'] + "[C]" not in required_json_object:
-                            required_json_object[convert_epoch_time_to_datetime(object_values[0])].append(
-                                (
-                                    object['metric']['name'] + "[C]", object_values[1]
+                        if object['metric']['name'] + "[C]" not in required_json_object_values_dict.keys():
+                            required_json_object_values_list.append(
+                                {
+                                    object['metric']['name'] + "[C]": object_values[1]
 
-                                ))
+                                })
+                            required_json_object_values_dict[object['metric']['name'] + "[C]"] = 'processed'
 
                 elif object['metric'].get('__name__') == 'ipmi_sensor_value' and object['metric'].get(
                         'name') == 'SYS Usage':
-                    if object['metric']['name'] + "[%]" not in required_json_object:
-                        required_json_object[convert_epoch_time_to_datetime(object_values[0])].append((
-                            object['metric']['name'] + "[%]", object_values[1]
-                        ))
+                    if object['metric']['name'] + "[%]" not in required_json_object_values_dict.keys():
+                        required_json_object_values_list.append({
+                            object['metric']['name'] + "[%]": object_values[1]
+                        })
+                        required_json_object_values_dict[object['metric']['name'] + "[%]"] = 'processed'
+            required_json_object_values_dict.clear()
+        if len(required_json_object_values_list) > 0:
+            try:
+                required_json_object[
+                    convert_epoch_time_to_datetime(object['values'][i][0])] = required_json_object_values_list
+                # print(required_json_object)
+                # print('\n')
+                final_list.append(required_json_object)
+            except Exception as e:
+                print('')
 
-            if len(required_json_object) > 0:
-                    main_json_object[convert_epoch_time_to_datetime(object_values[0])] = required_json_object
-                    print(main_json_object)
-                    final_list.append(main_json_object)
         i = i + 1
-    # print(final_list)
+    print(final_list)
+    print('\n')
     # return final_list, intendedfilename
 
 
