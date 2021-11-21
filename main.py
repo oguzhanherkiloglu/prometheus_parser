@@ -32,7 +32,8 @@ def convert_json_to_proper_json_array(json_response):
     intendedfilename = "test.csv"
     i = 0
     for object in json_response:
-        required_json_object = {convert_epoch_time_to_datetime(object['values'][i][0]): ""}
+        required_json_object_final = dict()
+        required_json_object = list()
         required_json_object_values_list = []
         required_json_object_values_dict = dict()
         # required_json_object = {convert_epoch_time_to_datetime(object['values'][i][0]): ""}
@@ -92,20 +93,18 @@ def convert_json_to_proper_json_array(json_response):
                             object['metric']['name'] + "[%]": object_values[1]
                         })
                         required_json_object_values_dict[object['metric']['name'] + "[%]"] = 'processed'
-            required_json_object_values_dict.clear()
-        if len(required_json_object_values_list) > 0:
-            try:
-                required_json_object[
-                    convert_epoch_time_to_datetime(object['values'][i][0])] = required_json_object_values_list
-                # print(required_json_object)
-                # print('\n')
-                final_list.append(required_json_object)
-            except Exception as e:
-                print('')
 
+        if len(required_json_object_values_list) > 0:
+            required_json_object.append(required_json_object_values_list)
+            final_list.append(required_json_object)
+            required_json_object_values_dict.clear()
+        try:
+            required_json_object_final[convert_epoch_time_to_datetime(object['values'][i][0])] = final_list
+            print(required_json_object_final)
+            print('\n')
+        except Exception as e:
+            print('')
         i = i + 1
-    print(final_list)
-    print('\n')
     # return final_list, intendedfilename
 
 
