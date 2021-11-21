@@ -23,10 +23,10 @@ def get_data_from_prometheus():
                 response_as_json = response.json()
                 jsn_rsp = convert_json_to_proper_json_array(
                     response_as_json["data"]["result"])
-                # for obj_keys, objs_values in jsn_rsp.items():
-                #     print(obj_keys)
-                #     print(objs_values)
-                #     print('\n')
+                for obj_keys, objs_values in jsn_rsp.items():
+                    print(obj_keys)
+                    print(objs_values)
+                    print('\n')
                 # if intended_json is not None:
                 #     write_csv(intended_json, intended_file_name)
 
@@ -104,18 +104,12 @@ def convert_json_to_proper_json_array(json_response):
             required_json_object_values_dict.clear()
             i = i + 1
         try:
-            datetime = convert_epoch_time_to_datetime(object['values'][i][0])
             required_json_object_final[convert_epoch_time_to_datetime(object['values'][i][0])] = final_list
-            print_json_object(datetime,final_list)
+            # print(required_json_object_final)
         except Exception as e:
             print()
 
-
-def print_json_object(datetime,final_list):
-    print(datetime)
-    print(final_list)
-    print('\n')
-
+    return required_json_object_final
 
 
 def convert_epoch_time_to_datetime(epoch_time):
