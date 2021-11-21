@@ -11,7 +11,7 @@ import settings
 def get_data_from_prometheus():
     for prometheus_instance in settings.PROMETHEUS_INSTANCES:
         url = 'http://' + settings.PROMETHEUS_URL_AND_PORT + '/api/v1/query_range?query={instance=\"' + prometheus_instance + '\"}&start=' + settings.PROMETHEUS_START + '&end=' + settings.PROMETHEUS_END + '&step=' + settings.PROMETHEUS_STEP
-
+        # print(url)
         headers = {
             'Content-Type': 'application/x-www-form-urlencoded'
         }
@@ -21,8 +21,12 @@ def get_data_from_prometheus():
             # print(response.text)
             if response.status_code == 200:
                 response_as_json = response.json()
-                convert_json_to_proper_json_array(
+                jsn_rsp = convert_json_to_proper_json_array(
                     response_as_json["data"]["result"])
+                for obj_keys, objs_values in jsn_rsp.items():
+                    print(obj_keys)
+                    print(objs_values)
+                    print('\n')
                 # if intended_json is not None:
                 #     write_csv(intended_json, intended_file_name)
 
@@ -31,8 +35,8 @@ def convert_json_to_proper_json_array(json_response):
     final_list = []
     intendedfilename = "test.csv"
     i = 0
+    required_json_object_final = dict()
     for object in json_response:
-        required_json_object_final = dict()
         required_json_object = list()
         required_json_object_values_list = []
         required_json_object_values_dict = dict()
@@ -55,21 +59,21 @@ def convert_json_to_proper_json_array(json_response):
                         })
                         required_json_object_values_dict[object['metric']['name'] + "[Amper]"] = 'processed'
 
-                elif object['metric'].get('__name__') == 'ipmi_fan_speed_rpm':
+                if object['metric'].get('__name__') == 'ipmi_fan_speed_rpm':
                     if object['metric']['name'] + "[RPM]" not in required_json_object_values_dict.keys():
                         required_json_object_values_list.append({
                             object['metric']['name'] + "[RPM]": object_values[1]
                         })
                         required_json_object_values_dict[object['metric']['name'] + "[RPM]"] = 'processed'
 
-                elif object['metric'].get('__name__') == 'ipmi_power_watts':
+                if object['metric'].get('__name__') == 'ipmi_power_watts':
                     if object['metric']['name'] + "[Watts]" not in required_json_object_values_dict.keys():
                         required_json_object_values_list.append({
                             object['metric']['name'] + "[Watts]": object_values[1]
                         })
                         required_json_object_values_dict[object['metric']['name'] + "[Watts]"] = 'processed'
 
-                elif object['metric'].get('__name__') == 'ipmi_temperature_celsius':
+                if object['metric'].get('__name__') == 'ipmi_temperature_celsius':
                     if object['metric']['instance'] == '192.168.105.153' and object['metric']['id'] == '151':
                         if "CPU1" + object['metric']['name'] + "[C]" not in required_json_object_values_dict.keys():
                             required_json_object_values_list.append({
@@ -86,7 +90,7 @@ def convert_json_to_proper_json_array(json_response):
                                 })
                             required_json_object_values_dict[object['metric']['name'] + "[C]"] = 'processed'
 
-                elif object['metric'].get('__name__') == 'ipmi_sensor_value' and object['metric'].get(
+                if object['metric'].get('__name__') == 'ipmi_sensor_value' and object['metric'].get(
                         'name') == 'SYS Usage':
                     if object['metric']['name'] + "[%]" not in required_json_object_values_dict.keys():
                         required_json_object_values_list.append({
@@ -98,14 +102,14 @@ def convert_json_to_proper_json_array(json_response):
             required_json_object.append(required_json_object_values_list)
             final_list.append(required_json_object)
             required_json_object_values_dict.clear()
+            i = i + 1
         try:
             required_json_object_final[convert_epoch_time_to_datetime(object['values'][i][0])] = final_list
-            print(required_json_object_final)
-            print('\n')
+            # print(required_json_object_final)
         except Exception as e:
-            print('')
-        i = i + 1
-    # return final_list, intendedfilename
+            print()
+
+    return required_json_object_final
 
 
 def convert_epoch_time_to_datetime(epoch_time):
