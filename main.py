@@ -23,6 +23,7 @@ def get_data_from_prometheus():
         if response is not None:
             print(str(prometheus_instance) + " SERVER VALUES")
             print('\n')
+            logger.info(str(prometheus_instance) + " SERVER VALUES")
             if response.status_code == 200:
                 response_as_json = response.json()
                 json_response = convert_json_to_proper_json_array(
