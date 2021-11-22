@@ -6,6 +6,10 @@ import settings
 
 import collections
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 def get_data_from_prometheus():
     for prometheus_instance in settings.PROMETHEUS_INSTANCES:
@@ -28,6 +32,8 @@ def get_data_from_prometheus():
                     result_dict[convert_epoch_time_to_datetime(object_key)] = object_value
                     print(result_dict)
                     print('\n')
+                    logger.info(result_dict)
+                    logger.info('\n')
                     result_dict.clear()
 
 
