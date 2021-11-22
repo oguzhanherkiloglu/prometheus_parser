@@ -21,8 +21,8 @@ def get_data_from_prometheus():
 
         response = requests.request("GET", url, headers=headers)
         if response is not None:
-            print(str(prometheus_instance) + " SERVER VALUES")
-            print('\n')
+            text_file = open(settings.PROMETHEUS_TXT_FILE_PATH, "w")
+            write_data_to_txt(text_file, str(prometheus_instance) + " SERVER VALUES")
             logger.info(str(prometheus_instance) + " SERVER VALUES")
             if response.status_code == 200:
                 response_as_json = response.json()
@@ -31,11 +31,11 @@ def get_data_from_prometheus():
                 result_dict = dict()
                 for object_key, object_value in json_response.items():
                     result_dict[convert_epoch_time_to_datetime(object_key)] = object_value
-                    print(result_dict)
-                    print('\n')
+                    write_data_to_txt(text_file, str(result_dict))
                     logger.info(result_dict)
                     logger.info('\n')
                     result_dict.clear()
+            close_txt_file(text_file)
 
 
 def convert_json_to_proper_json_array(json_response):
@@ -83,6 +83,16 @@ def convert_json_to_proper_json_array(json_response):
 def convert_epoch_time_to_datetime(epoch_time):
     datetime_time = datetime.datetime.fromtimestamp(epoch_time).strftime('%Y-%m-%d %H:%M:%S')
     return str(datetime_time)
+
+
+def write_data_to_txt(text_file, string):
+    text_file.write(string+"\n")
+    print(string)
+    print('\n')
+
+
+def close_txt_file(text_file):
+    text_file.close()
 
 
 if __name__ == '__main__':
