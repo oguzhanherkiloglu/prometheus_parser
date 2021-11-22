@@ -2,7 +2,7 @@ import datetime
 
 import requests
 
-import settings_humidity_sensor as settings
+import settings_pdu_sensor as settings
 
 import collections
 
