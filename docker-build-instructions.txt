@@ -1,0 +1,2 @@
+docker build -t prometheus_parser .
+docker run -itd --name prometheus_parser prometheus_parser:latest
