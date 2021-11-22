@@ -21,13 +21,13 @@ def get_data_from_prometheus():
 
         response = requests.request("GET", url, headers=headers)
         if response is not None:
-            text_file = open(settings.PROMETHEUS_TXT_FILE_PATH, "w")
-            write_data_to_txt(text_file, str(prometheus_instance) + " SERVER VALUES")
-            logger.info(str(prometheus_instance) + " SERVER VALUES")
             if response.status_code == 200:
                 response_as_json = response.json()
-                json_response = convert_json_to_proper_json_array(
+                json_response, file_path = convert_json_to_proper_json_array(
                     response_as_json["data"]["result"])
+                text_file = open(file_path, "w")
+                write_data_to_txt(text_file, str(prometheus_instance) + " SERVER VALUES")
+                logger.info(str(prometheus_instance) + " SERVER VALUES")
                 result_dict = dict()
                 for object_key, object_value in json_response.items():
                     result_dict[convert_epoch_time_to_datetime(object_key)] = object_value
@@ -40,7 +40,12 @@ def get_data_from_prometheus():
 
 def convert_json_to_proper_json_array(json_response):
     object_dict = collections.defaultdict(list)
+    file_path = ''
     for object in json_response:
+        intendedfilename = "Rack" + object['metric']['Rack_Cabinet'] + "firstrow" + object['metric'][
+            'First_Row'] + "height" + object['metric']['Height'] + ".txt"
+        file_path = settings.PROMETHEUS_TXT_FILE_PATH.format(
+            file_name=str(intendedfilename))
         for object_values in object['values']:
             if (object['metric'].get('name') is not None) and (
                     object['metric'].get('__name__') == 'ipmi_current_amperes') or (
@@ -77,7 +82,7 @@ def convert_json_to_proper_json_array(json_response):
                     object_dict[object_values[0]].append({
                         object['metric']['name'] + "[%]": object_values[1]})
 
-    return object_dict
+    return object_dict, file_path
 
 
 def convert_epoch_time_to_datetime(epoch_time):
@@ -86,7 +91,7 @@ def convert_epoch_time_to_datetime(epoch_time):
 
 
 def write_data_to_txt(text_file, string):
-    text_file.write(string+"\n")
+    text_file.write(string + "\n")
     print(string)
     print('\n')
 
