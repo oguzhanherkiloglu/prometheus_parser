@@ -2,7 +2,7 @@ import datetime
 
 import requests
 
-import settings_humidity_sensor as settings
+import settings_dewpoint_sensor as settings
 
 import collections
 
@@ -43,11 +43,11 @@ def convert_json_to_proper_json_array(json_response):
     file_path = settings.PROMETHEUS_TXT_FILE_PATH
     for object in json_response:
         if (object['metric'].get('__name__') is not None) and (
-                object['metric'].get('__name__') == 'humiSensorValue'):
-            if object['metric'].get('__name__') == 'humiSensorValue':
+                object['metric'].get('__name__') == 'dewPointSensorValue'):
+            if object['metric'].get('__name__') == 'dewPointSensorValue':
                 for object_values in object['values']:
                     object_dict[object_values[0]].append({
-                        settings.HUMIDITY_SENSOR_LABELS.get(object['metric'].get('humiSensorIndex')): round(
+                        settings.DEWPOINT_SENSOR_LABELS.get(object['metric'].get('dewPointSensorIndex')): round(
                             (int(object_values[1]) / 10), 2)
                     })
 
