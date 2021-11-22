@@ -35,52 +35,21 @@ def get_data_from_prometheus():
                     logger.info(result_dict)
                     logger.info('\n')
                     result_dict.clear()
-            close_txt_file(text_file)
+                close_txt_file(text_file)
 
 
 def convert_json_to_proper_json_array(json_response):
     object_dict = collections.defaultdict(list)
-    file_path = ''
+    file_path = settings.PROMETHEUS_TXT_FILE_PATH
     for object in json_response:
-        intendedfilename = "Rack" + object['metric']['Rack_Cabinet'] + "firstrow" + object['metric'][
-            'First_Row'] + "height" + object['metric']['Height'] + ".txt"
-        file_path = settings.PROMETHEUS_TXT_FILE_PATH.format(
-            file_name=str(intendedfilename))
-        for object_values in object['values']:
-            if (object['metric'].get('name') is not None) and (
-                    object['metric'].get('__name__') == 'ipmi_current_amperes') or (
-                    object['metric'].get('__name__') == 'ipmi_fan_speed_rpm') or (
-                    object['metric'].get('__name__') == 'ipmi_power_watts') or (
-                    object['metric'].get('__name__') == 'ipmi_temperature_celsius') or (
-                    object['metric'].get('__name__') == 'ipmi_sensor_value' and object['metric'].get(
-                'name') == 'SYS Usage'):
-                if object['metric'].get('__name__') == 'ipmi_current_amperes':
+        if (object['metric'].get('__name__') is not None) and (
+                object['metric'].get('__name__') == 'tempSensorValue'):
+            if object['metric'].get('__name__') == 'tempSensorValue':
+                for object_values in object['values']:
                     object_dict[object_values[0]].append({
-                        object['metric']['name'] + "[Amper]": object_values[1]
+                        settings.TEMP_SENSOR_LABELS.get(object['metric'].get('tempSensorIndex')): round(
+                            (int(object_values[1]) / 10), 2)
                     })
-                if object['metric'].get('__name__') == 'ipmi_fan_speed_rpm':
-                    object_dict[object_values[0]].append({
-                        object['metric']['name'] + "[RPM]": object_values[1]
-                    })
-
-                if object['metric'].get('__name__') == 'ipmi_power_watts':
-                    object_dict[object_values[0]].append({
-                        object['metric']['name'] + "[Watts]": object_values[1]
-                    })
-
-                if object['metric'].get('__name__') == 'ipmi_temperature_celsius':
-                    if object['metric']['instance'] == '192.168.105.153' and object['metric']['id'] == '151':
-                        object_dict[object_values[0]].append({
-                            "CPU1" + object['metric']['name'] + "[C]": object_values[1]
-                        })
-                    else:
-                        object_dict[object_values[0]].append({
-                            object['metric']['name'] + "[C]": object_values[1]
-                        })
-                if object['metric'].get('__name__') == 'ipmi_sensor_value' and object['metric'].get(
-                        'name') == 'SYS Usage':
-                    object_dict[object_values[0]].append({
-                        object['metric']['name'] + "[%]": object_values[1]})
 
     return object_dict, file_path
 

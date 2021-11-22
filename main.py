@@ -35,7 +35,7 @@ def get_data_from_prometheus():
                     logger.info(result_dict)
                     logger.info('\n')
                     result_dict.clear()
-            close_txt_file(text_file)
+                close_txt_file(text_file)
 
 
 def convert_json_to_proper_json_array(json_response):
@@ -47,7 +47,7 @@ def convert_json_to_proper_json_array(json_response):
         file_path = settings.PROMETHEUS_TXT_FILE_PATH.format(
             file_name=str(intendedfilename))
         for object_values in object['values']:
-            if (object['metric'].get('name') is not None) and (
+            if (object['metric'].get('__name__') is not None) and (
                     object['metric'].get('__name__') == 'ipmi_current_amperes') or (
                     object['metric'].get('__name__') == 'ipmi_fan_speed_rpm') or (
                     object['metric'].get('__name__') == 'ipmi_power_watts') or (
