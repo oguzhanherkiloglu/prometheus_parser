@@ -41,55 +41,56 @@ def get_data_from_prometheus():
 def convert_json_to_proper_json_array(json_response):
     object_dict = collections.defaultdict(list)
     file_path = settings.PROMETHEUS_TXT_FILE_PATH
-    for object_values in object['values']:
-        if (object['metric'].get('__name__') is not None) and (
-                object['metric'].get('__name__') == 'airIRG2GroupStatusMinRackInletTempMetric') or (
-                object['metric'].get('__name__') == 'airIRG2RDT2StatusSupplyAirTempMetric') or (
-                object['metric'].get('__name__') == 'airIRG2RDT2StatusReturnAirTempMetric') or (
-                object['metric'].get('__name__') == 'airIRG2RDT2StatusSuctionTempMetric') or (
-                object['metric'].get('__name__') == 'airIRG2GroupStatusAirFlowMetric') or (
-                object['metric'].get('__name__') == 'airIRG2GroupStatusAirFlowUS') or (
-                object['metric'].get('__name__') == 'airIRG2RDT2StatusEvaporatorFanSpeed') or (
-                object['metric'].get('__name__') == 'airIRG2GroupStatusCoolOutput') or (
-                object['metric'].get('__name__') == 'airIRG2RDT2StatusCoolDemand'):
-            if object['metric'].get('__name__') == 'airIRG2GroupStatusMinRackInletTempMetric':
-                object_dict[object_values[0]].append({
-                    object['metric']['name'] + "[C]": round(int(object_values[1]) / 10, 2)
-                })
-            if object['metric'].get('__name__') == 'airIRG2RDT2StatusSupplyAirTempMetric':
-                object_dict[object_values[0]].append({
-                    object['metric']['name'] + "[C]": round(int(object_values[1]) / 10, 2)
-                })
+    for object in json_response:
+        for object_values in object['values']:
+                    if (object['metric'].get('__name__') is not None) and (
+                            object['metric'].get('__name__') == 'airIRG2GroupStatusMinRackInletTempMetric') or (
+                            object['metric'].get('__name__') == 'airIRG2RDT2StatusSupplyAirTempMetric') or (
+                            object['metric'].get('__name__') == 'airIRG2RDT2StatusReturnAirTempMetric') or (
+                            object['metric'].get('__name__') == 'airIRG2RDT2StatusSuctionTempMetric') or (
+                            object['metric'].get('__name__') == 'airIRG2GroupStatusAirFlowMetric') or (
+                            object['metric'].get('__name__') == 'airIRG2GroupStatusAirFlowUS') or (
+                            object['metric'].get('__name__') == 'airIRG2RDT2StatusEvaporatorFanSpeed') or (
+                            object['metric'].get('__name__') == 'airIRG2GroupStatusCoolOutput') or (
+                            object['metric'].get('__name__') == 'airIRG2RDT2StatusCoolDemand'):
+                        if object['metric'].get('__name__') == 'airIRG2GroupStatusMinRackInletTempMetric':
+                            object_dict[object_values[0]].append({
+                                object['metric']['__name__'] + "[C]": round(int(object_values[1]) / 10, 2)
+                            })
+                        if object['metric'].get('__name__') == 'airIRG2RDT2StatusSupplyAirTempMetric':
+                            object_dict[object_values[0]].append({
+                                object['metric']['__name__'] + "[C]": round(int(object_values[1]) / 10, 2)
+                            })
 
-            if object['metric'].get('__name__') == 'airIRG2RDT2StatusReturnAirTempMetric':
-                object_dict[object_values[0]].append({
-                    object['metric']['name'] + "[C]": round(int(object_values[1]) / 10, 2)
-                })
+                        if object['metric'].get('__name__') == 'airIRG2RDT2StatusReturnAirTempMetric':
+                            object_dict[object_values[0]].append({
+                                object['metric']['__name__'] + "[C]": round(int(object_values[1]) / 10, 2)
+                            })
 
-            if object['metric'].get('__name__') == 'airIRG2RDT2StatusSuctionTempMetric':
-                object_dict[object_values[0]].append({
-                    object['metric']['name'] + "[C]": round(int(object_values[1]) / 10, 2)
-                })
-            if object['metric'].get('__name__') == 'airIRG2GroupStatusAirFlowMetric':
-                object_dict[object_values[0]].append({
-                    object['metric']['name'] + "[L/s]": round(int(object_values[1]) / 100, 2)
-                })
-            if object['metric'].get('__name__') == 'airIRG2GroupStatusAirFlowUS':
-                object_dict[object_values[0]].append({
-                    object['metric']['name'] + "[Cubicfeet/m]": round(int(object_values[1]) / 100, 2)
-                })
-            if object['metric'].get('__name__') == 'airIRG2RDT2StatusEvaporatorFanSpeed':
-                object_dict[object_values[0]].append({
-                    object['metric']['name'] + "[%]": round(int(object_values[1]) / 10, 2)
-                })
-            if object['metric'].get('__name__') == 'airIRG2GroupStatusCoolOutput':
-                object_dict[object_values[0]].append({
-                    object['metric']['name'] + "[KWh]": round(int(object_values[1]) / 10, 2)
-                })
-            if object['metric'].get('__name__') == 'airIRG2RDT2StatusCoolDemand':
-                object_dict[object_values[0]].append({
-                    object['metric']['name'] + "[KWh]": round(int(object_values[1]) / 10, 2)
-                })
+                        if object['metric'].get('__name__') == 'airIRG2RDT2StatusSuctionTempMetric':
+                            object_dict[object_values[0]].append({
+                                object['metric']['__name__'] + "[C]": round(int(object_values[1]) / 10, 2)
+                            })
+                        if object['metric'].get('__name__') == 'airIRG2GroupStatusAirFlowMetric':
+                            object_dict[object_values[0]].append({
+                                object['metric']['__name__'] + "[L/s]": round(int(object_values[1]) / 100, 2)
+                            })
+                        if object['metric'].get('__name__') == 'airIRG2GroupStatusAirFlowUS':
+                            object_dict[object_values[0]].append({
+                                object['metric']['__name__'] + "[Cubicfeet/m]": round(int(object_values[1]) / 100, 2)
+                            })
+                        if object['metric'].get('__name__') == 'airIRG2RDT2StatusEvaporatorFanSpeed':
+                            object_dict[object_values[0]].append({
+                                object['metric']['__name__'] + "[%]": round(int(object_values[1]) / 10, 2)
+                            })
+                        if object['metric'].get('__name__') == 'airIRG2GroupStatusCoolOutput':
+                            object_dict[object_values[0]].append({
+                                object['metric']['__name__'] + "[KWh]": round(int(object_values[1]) / 10, 2)
+                            })
+                        if object['metric'].get('__name__') == 'airIRG2RDT2StatusCoolDemand':
+                            object_dict[object_values[0]].append({
+                                object['metric']['__name__'] + "[KWh]": round(int(object_values[1]) / 10, 2)
+                            })
 
     return object_dict, file_path
 
