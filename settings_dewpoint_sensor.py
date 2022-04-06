@@ -3,7 +3,7 @@ PROMETHEUS_STEP = '10s'
 PROMETHEUS_START = '2022-04-02T09:15:00.000Z'
 PROMETHEUS_END = '2022-04-02T11:15:00.999Z'
 PROMETHEUS_URL_AND_PORT = '192.168.105.98:9090'
-PROMETHEUS_TXT_FILE_PATH = '/Users/oguzhanherkiloglu/prometheus-parser/netbotz_sensor_values.txt'
+PROMETHEUS_TXT_FILE_PATH = '/Users/oguzhanherkiloglu/prometheus-parser/dewpoint_sensor_values.txt'
 DEWPOINT_SENSOR_LABELS = {
     '1000015730': 'Dew Point (Cabin 2 - Front - 26U)',
     '1490079962': 'Dew Point (Cabin 4 - Front - 26U)',
