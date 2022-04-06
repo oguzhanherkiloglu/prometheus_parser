@@ -1,9 +1,9 @@
-PROMETHEUS_INSTANCES = ['192.168.105.207']
+PROMETHEUS_INSTANCES = ['192.168.105.209']
 PROMETHEUS_STEP = '10s'
 PROMETHEUS_START = '2022-04-03T12:10:00.000Z'
 PROMETHEUS_END = '2022-04-03T14:15:00.999Z'
 PROMETHEUS_URL_AND_PORT = '192.168.105.98:9090'
-PROMETHEUS_TXT_FILE_PATH = '/Users/oguzhanherkiloglu/prometheus-parser/apcrpdu_RackCabinet2_power.txt'
+PROMETHEUS_TXT_FILE_PATH = '/Users/oguzhanherkiloglu/prometheus-parser/apcrpdu_RackCabinet3_power.txt'
 HUMIDITY_SENSOR_LABELS = {
     '1054205155': 'Humidity (1)',
     '1121716336': 'Humidity (Cabin 3 - Back - 33U)',
