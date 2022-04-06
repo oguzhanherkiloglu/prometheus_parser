@@ -1,9 +1,9 @@
 PROMETHEUS_INSTANCES = ['192.168.105.205']
 PROMETHEUS_STEP = '10s'
-PROMETHEUS_START = '2021-11-20T10:30:00.000Z'
-PROMETHEUS_END = '2021-11-20T10:32:20.999Z'
+PROMETHEUS_START = '2022-04-02T09:15:00.000Z'
+PROMETHEUS_END = '2022-04-02T11:15:00.999Z'
 PROMETHEUS_URL_AND_PORT = '192.168.105.98:9090'
-PROMETHEUS_TXT_FILE_PATH = 'C:/Users/oguzhan.herkiloglu/Desktop/test/netbotz_sensor_values.txt'
+PROMETHEUS_TXT_FILE_PATH = '/Users/oguzhanherkiloglu/prometheus-parser/temperature_sensor_values.txt'
 TEMP_SENSOR_LABELS = {
     '1046259204': 'Temperature (1)',
     '1619732064': 'Temperature (2)',
