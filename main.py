@@ -69,9 +69,13 @@ def convert_json_to_proper_json_array(json_response):
                     })
 
                 if object['metric'].get('__name__') == 'ipmi_temperature_celsius':
-                    if object['metric']['instance'] == '192.168.105.153' and object['metric']['id'] == '151':
+                    if object['metric']['instance'] == '192.168.105.16' and object['metric']['id'] == '24':
                         object_dict[object_values[0]].append({
                             "CPU1" + object['metric']['name'] + "[C]": object_values[1]
+                        })
+                    elif object['metric']['instance'] == '192.168.105.16' and object['metric']['id'] == '25':
+                        object_dict[object_values[0]].append({
+                            "CPU2" + object['metric']['name'] + "[C]": object_values[1]
                         })
                     else:
                         object_dict[object_values[0]].append({
