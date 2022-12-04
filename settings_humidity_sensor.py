@@ -1,9 +1,9 @@
 PROMETHEUS_INSTANCES = ['192.168.105.205']
 PROMETHEUS_STEP = '10s'
-PROMETHEUS_START = '2022-06-02T14:00:00.000Z'
-PROMETHEUS_END = '2022-06-02T16:00:00.999Z'
+PROMETHEUS_START = '2022-06-03T12:00:00.000Z'
+PROMETHEUS_END = '2022-06-03T14:00:00.999Z'
 PROMETHEUS_URL_AND_PORT = '192.168.105.98:9090'
-PROMETHEUS_TXT_FILE_PATH = '/Users/oguzhanherkiloglu/02June/door_opened/netbotz_sensor_values_door_opened_humidity_02_06_2022.txt'
+PROMETHEUS_TXT_FILE_PATH = '/Users/oguzhanherkiloglu/03June/door_opened/netbotz_sensor_values_door_opened_humidity_03_06_2022.txt'
 HUMIDITY_SENSOR_LABELS = {
     '1054205155': 'Humidity (1)',
     '1121716336': 'Humidity (Cabin 3 - Back - 32U)',
